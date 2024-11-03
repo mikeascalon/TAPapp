@@ -1,0 +1,56 @@
+.navbar {
+    background-color: rgba(0, 0, 0, 0.4); /* Dark background */
+    width: 100%; /* Full-width */
+    display: flex;
+    align-items: center;
+}
+
+/* Navbar brand styling */
+.navbar-brand {
+    font-size: 1.1rem;
+    color: #d7d7d7;
+    margin-right: auto; /* Aligns brand to the left */
+}
+
+/* Toggle button for mobile (hidden on larger screens) */
+.navbar-toggler {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Nav items in a row */
+.navbar-nav {
+    display: flex;
+    gap: 1rem; /* Space between links */
+}
+
+/* Nav item links */
+.nav-item ::deep a {
+    color: #d7d7d7;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+    /* Active and hover styles */
+    .nav-item ::deep a.active {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+    }
+
+    .nav-item ::deep a:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+    }
+
+/* Media Query for Desktop */
+@media (min-width: 641px) {
+    .navbar-toggler {
+        display: none; /* Hide toggler button on larger screens */
+    }
+
+    .collapse {
+        display: flex; /* Ensure items are displayed in a row on larger screens */
+    }
+}

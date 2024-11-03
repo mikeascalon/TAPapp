@@ -1,0 +1,246 @@
+﻿@page "/todolist"
+@inject HttpClient HttpClient
+
+<div class="background-grad p-5 m-5">
+    <div class="alert alert-primary" role="alert">
+        <h3 class="text-center">To-Do List by Timeline</h3>
+    </div>
+
+    <!-- Task Groups -->
+    <h4>18 Months Left Tasks</h4>
+    @if (todo18Months.Any())
+    {
+        <ul class="list-group">
+            @foreach (var task in todo18Months)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    @if (task.IsEditing)
+                    {
+                        <input type="text" class="form-control me-2" @bind="task.Name" />
+                    }
+                    else
+                    {
+                        <span style="@(task.IsDone ? "text-decoration: line-through;" : "")">@task.Name</span>
+                    }
+                    <div>
+                        <button class="btn btn-success btn-sm me-2" @onclick="() => toggleTaskDone(task)">
+                            @(task.IsDone ? "Undo" : "Mark Done")
+                        </button>
+                        <button class="btn btn-primary btn-sm" @onclick="() => toggleEditTask(task)">
+                            @(task.IsEditing ? "Save" : "Edit")
+                        </button>
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No tasks available for 18 months left.</p>
+    }
+
+    <h4>12 Months Left Tasks</h4>
+    @if (todo12Months.Any())
+    {
+        <ul class="list-group">
+            @foreach (var task in todo12Months)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    @if (task.IsEditing)
+                    {
+                        <input type="text" class="form-control me-2" @bind="task.Name" />
+                    }
+                    else
+                    {
+                        <span style="@(task.IsDone ? "text-decoration: line-through;" : "")">@task.Name</span>
+                    }
+                    <div>
+                        <button class="btn btn-success btn-sm me-2" @onclick="() => toggleTaskDone(task)">
+                            @(task.IsDone ? "Undo" : "Mark Done")
+                        </button>
+                        <button class="btn btn-primary btn-sm" @onclick="() => toggleEditTask(task)">
+                            @(task.IsEditing ? "Save" : "Edit")
+                        </button>
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No tasks available for 12 months left.</p>
+    }
+
+    <h4>6 Months Left Tasks</h4>
+    @if (todo6Months.Any())
+    {
+        <ul class="list-group">
+            @foreach (var task in todo6Months)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    @if (task.IsEditing)
+                    {
+                        <input type="text" class="form-control me-2" @bind="task.Name" />
+                    }
+                    else
+                    {
+                        <span style="@(task.IsDone ? "text-decoration: line-through;" : "")">@task.Name</span>
+                    }
+                    <div>
+                        <button class="btn btn-success btn-sm me-2" @onclick="() => toggleTaskDone(task)">
+                            @(task.IsDone ? "Undo" : "Mark Done")
+                        </button>
+                        <button class="btn btn-primary btn-sm" @onclick="() => toggleEditTask(task)">
+                            @(task.IsEditing ? "Save" : "Edit")
+                        </button>
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No tasks available for 6 months left.</p>
+    }
+
+    <hr />
+
+    <!-- Add New Task -->
+    <h4>Add New Task</h4>
+    <div class="d-grid gap-2">
+        <input class="form-control form-control-lg" type="text" @bind="newTodoItem" placeholder="Add a new task" />
+        <select class="form-select mt-2" @bind="selectedGroup">
+            <option value="18">18 Months</option>
+            <option value="12">12 Months</option>
+            <option value="6">6 Months</option>
+        </select>
+        <button class="btn btn-primary mt-2" @onclick="addTodoItem">Add</button>
+    </div>
+</div>
+
+<style>
+    .background-grad {
+        background-color: #0093E9;
+        background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
+    }
+</style>
+
+@code {
+    public class TodoTask
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; } // Nullable to avoid initialization warning
+        public bool IsDone { get; set; }
+        public bool IsEditing { get; set; }
+        public int MonthsLeft { get; set; }
+    }
+
+    List<TodoTask> todo18Months = new();
+    List<TodoTask> todo12Months = new();
+    List<TodoTask> todo6Months = new();
+
+    string newTodoItem = "";
+    int selectedGroup = 18;
+    bool isModalOpen = false;
+    int modalMonths = 0;
+
+    bool show18MonthsTasks = false;
+    bool show12MonthsTasks = false;
+    bool show6MonthsTasks = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadTasks();
+    }
+
+    private async Task LoadTasks()
+    {
+        try
+        {
+            Console.WriteLine("Attempting to load tasks from the API...");
+            var tasks = await HttpClient.GetFromJsonAsync<List<TodoTask>>("api/tasks");
+            if (tasks != null)
+            {
+                Console.WriteLine($"Loaded {tasks.Count} tasks.");
+                todo18Months = tasks.Where(t => t.MonthsLeft == 18).ToList();
+                todo12Months = tasks.Where(t => t.MonthsLeft == 12).ToList();
+                todo6Months = tasks.Where(t => t.MonthsLeft == 6).ToList();
+            }
+            else
+            {
+                Console.WriteLine("No tasks were loaded from the API.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading tasks: {ex.Message}");
+        }
+    }
+
+
+    private async Task addTodoItem()
+    {
+        if (!string.IsNullOrWhiteSpace(newTodoItem))
+        {
+            var newTask = new TodoTask
+                {
+                    Name = newTodoItem,
+                    IsDone = false,
+                    MonthsLeft = selectedGroup
+                };
+
+            var response = await HttpClient.PostAsJsonAsync("api/tasks", newTask);
+            if (response.IsSuccessStatusCode)
+            {
+                await LoadTasks();
+            }
+            newTodoItem = "";
+        }
+    }
+
+    private async Task toggleTaskDone(TodoTask task)
+    {
+        task.IsDone = !task.IsDone;
+        await HttpClient.PutAsJsonAsync($"api/tasks/{task.Id}", task);
+        await LoadTasks();
+    }
+
+    private void toggleEditTask(TodoTask task)
+    {
+        task.IsEditing = !task.IsEditing;
+    }
+
+    private void openModal(int months)
+    {
+        modalMonths = months;
+        isModalOpen = true;
+    }
+
+    private void closeModal()
+    {
+        isModalOpen = false;
+    }
+
+    private void toggleVisibility(int months)
+    {
+        switch (months)
+        {
+            case 18:
+                show18MonthsTasks = !show18MonthsTasks;
+                break;
+            case 12:
+                show12MonthsTasks = !show12MonthsTasks;
+                break;
+            case 6:
+                show6MonthsTasks = !show6MonthsTasks;
+                break;
+        }
+    }
+
+    private int CalculateProgress(List<TodoTask> tasks)
+    {
+        if (tasks.Count == 0) return 0;
+        int completedTasks = tasks.Count(t => t.IsDone);
+        return (int)((double)completedTasks / tasks.Count * 100);
+    }
+}
