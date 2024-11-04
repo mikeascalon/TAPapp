@@ -2,15 +2,15 @@
 @inject NavigationManager Navigation
 
 <div class="background-grad p-5 m-5 text-center">
-    <h2>Welcome, Soldier!</h2>
-    <h4>to the Transition Assistance Program</h4>
+    <h2>Welcome, Service Member!</h2>
+    <h4> Transition Assistance Program Checklist</h4>
 
-    <p class="mt-3">We're here to help you prepare for your transition to civilian life.</p>
+    <p class="mt-3">Easy way to track requiments to transition out of the Service</p>
     <hr />
 
     <!-- Date Input for Service End Date -->
     <div class="form-group mt-4">
-        <label for="endDate" class="form-label"><strong>Enter Your End of Service Date:</strong></label>
+        <label for="endDate" class="form-label"><strong>Enter Your ETS Date:</strong></label>
         <input type="date" id="endDate" class="form-control date-input" @bind="EndDate" />
     </div>
 
@@ -18,7 +18,7 @@
     @if (monthsRemaining > 0 || daysRemaining > 0)
     {
         <div class="mt-4 countdown">
-            <h3>Countdown to End of Service</h3>
+            <h3>Countdown to ETS</h3>
             <h1>@monthsRemaining months and @daysRemaining days</h1>
         </div>
     }
