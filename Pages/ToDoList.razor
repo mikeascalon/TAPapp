@@ -26,8 +26,13 @@
     </div>
 
     <!-- Task Groups -->
-    <h4>18 Months Left Tasks</h4>
-    @if (todo18Months.Any())
+    <h4>
+        18 Months Left Tasks
+        <button class="btn btn-link" @onclick="() => ToggleTaskGroupVisibility(18)">
+            <i class="@(show18MonthsTasks ? "bi bi-dash-circle" : "bi bi-plus-circle")" style="color: #f0ba6e;"></i>
+        </button>
+    </h4>
+    @if (show18MonthsTasks && todo18Months.Any())
     {
         <ul class="list-group">
             @foreach (var task in todo18Months)
@@ -52,6 +57,11 @@
                 </li>
             }
         </ul>
+    }
+    
+    else if (!show18MonthsTasks)
+    {
+    <p>Tasks hidden. Click to show.</p>
     }
     else
     {
@@ -175,8 +185,7 @@
 
     string newTodoItem = "";
     int selectedGroup = 18;
-    bool isModalOpen = false;
-    int modalMonths = 0;
+    
 
     bool show18MonthsTasks = false;
     bool show12MonthsTasks = false;
@@ -208,6 +217,22 @@
         catch (Exception ex)
         {
             Console.WriteLine($"Error loading tasks: {ex.Message}");
+        }
+    }
+
+    private void ToggleTaskGroupVisibility(int months)
+    {
+        switch (months)
+        {
+            case 18:
+                show18MonthsTasks = !show18MonthsTasks;
+                break;
+            case 12:
+                show12MonthsTasks = !show12MonthsTasks;
+                break;
+            case 6:
+                show6MonthsTasks = !show6MonthsTasks;
+                break;
         }
     }
 
@@ -244,32 +269,11 @@
         task.IsEditing = !task.IsEditing;
     }
 
-    private void openModal(int months)
-    {
-        modalMonths = months;
-        isModalOpen = true;
-    }
+ 
 
-    private void closeModal()
-    {
-        isModalOpen = false;
-    }
+    
 
-    private void toggleVisibility(int months)
-    {
-        switch (months)
-        {
-            case 18:
-                show18MonthsTasks = !show18MonthsTasks;
-                break;
-            case 12:
-                show12MonthsTasks = !show12MonthsTasks;
-                break;
-            case 6:
-                show6MonthsTasks = !show6MonthsTasks;
-                break;
-        }
-    }
+
 
     private int CalculateProgress(List<TodoTask> tasks)
     {
