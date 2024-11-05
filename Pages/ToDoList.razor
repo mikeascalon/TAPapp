@@ -6,6 +6,25 @@
         <h3 class="text-center">Checklist </h3>
     </div>
 
+    <!-- Stacked Progress Bar with Labels -->
+    <div class="progress-stacked mt-3 mb-4">
+        <div class="progress" role="progressbar" aria-label="18 Months Completed Tasks" aria-valuenow="@CalculateProgress(todo18Months)" aria-valuemin="0" aria-valuemax="100" style="width: @CalculateProgress(todo18Months)%">
+            <div class="progress-bar bg-success">
+                @CalculateProgress(todo18Months)%
+            </div>
+        </div>
+        <div class="progress" role="progressbar" aria-label="12 Months Completed Tasks" aria-valuenow="@CalculateProgress(todo12Months)" aria-valuemin="0" aria-valuemax="100" style="width: @CalculateProgress(todo12Months)%">
+            <div class="progress-bar bg-warning">
+                @CalculateProgress(todo12Months)%
+            </div>
+        </div>
+        <div class="progress" role="progressbar" aria-label="6 Months Completed Tasks" aria-valuenow="@CalculateProgress(todo6Months)" aria-valuemin="0" aria-valuemax="100" style="width: @CalculateProgress(todo6Months)%">
+            <div class="progress-bar bg-info">
+                @CalculateProgress(todo6Months)%
+            </div>
+        </div>
+    </div>
+
     <!-- Task Groups -->
     <h4>18 Months Left Tasks</h4>
     @if (todo18Months.Any())
@@ -122,6 +141,21 @@
     .background-grad {
         background-color: #0093E9;
         background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
+    }
+
+    .progress-stacked {
+        display: flex;
+    }
+
+    .progress {
+        flex: 1;
+    }
+
+    .progress-bar {
+        width: 100%;
+        color: white; /* Ensures text is visible on dark backgrounds */
+        text-align: center;
+        font-weight: bold;
     }
 </style>
 
