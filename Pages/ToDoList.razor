@@ -26,9 +26,11 @@
         </div>
     </div>
 
+
+
     <!-- Task Groups -->
     <h4>
-        18 Months Left Tasks
+        Tasks to Begin at 18 Months Remaining
         <button class="btn btn-link" @onclick="() => ToggleTaskGroupVisibility(18)">
             <i class="@(show18MonthsTasks ? "bi bi-dash-circle" : "bi bi-plus-circle")" style="color: #f0ba6e;"></i>
         </button>
@@ -54,6 +56,10 @@
                         <button class="btn btn-primary btn-sm" @onclick="() => toggleEditTask(task)">
                             @(task.IsEditing ? "Save" : "Edit")
                         </button>
+                        <button class="btn btn-danger btn-sm" @onclick="() => deleteTask(task)">
+                            Delete
+                        </button>
+
                     </div>
                 </li>
             }
@@ -69,7 +75,8 @@
         <p>No tasks available for 18 months left.</p>
     }
 
-    <h4>12 Months Left Tasks
+    <h4>
+        Tasks to Begin at 12 Months Remaining
         <button class="btn btn-link" @onclick="() => ToggleTaskGroupVisibility(12)">
             <i class="@(!show12MonthsTasks ? "bi bi-dash-circle" : "bi bi-plus-circle")" style="color: #f0ba6e;"></i>
         </button>
@@ -95,6 +102,9 @@
                         <button class="btn btn-primary btn-sm" @onclick="() => toggleEditTask(task)">
                             @(task.IsEditing ? "Save" : "Edit")
                         </button>
+                        <button class="btn btn-danger btn-sm" @onclick="() => deleteTask(task)">
+                            Delete
+                        </button>
                     </div>
                 </li>
             }
@@ -109,7 +119,8 @@
         <p>No tasks available for 12 months left.</p>
     }
 
-    <h4>6 Months Left Tasks
+    <h4>
+        Tasks to Begin at 6 Months Remaining
         <button class="btn btn-link" @onclick="() => ToggleTaskGroupVisibility(6)">
             <i class="@(!show6MonthsTasks ? "bi bi-dash-circle" : "bi bi-plus-circle")" style="color: #f0ba6e;"></i>
         </button>
@@ -135,10 +146,17 @@
                         <button class="btn btn-primary btn-sm" @onclick="() => toggleEditTask(task)">
                             @(task.IsEditing ? "Save" : "Edit")
                         </button>
+                        <button class="btn btn-danger btn-sm" @onclick="() => deleteTask(task)">
+                            Delete
+                        </button>
                     </div>
                 </li>
             }
         </ul>
+    }
+    else if (!show6MonthsTasks)
+    {
+        <p>Tasks hidden. Click to show.</p>
     }
     else
     {
@@ -148,7 +166,7 @@
     <hr />
 
     <!-- Add New Task -->
-    <h4>Add New Task</h4>
+    <h5>Add New Task</h5>
     <div class="d-grid gap-2">
         <input class="form-control form-control-lg" type="text" @bind="newTodoItem" placeholder="Add a new task" />
         <select class="form-select mt-2" @bind="selectedGroup">
@@ -253,6 +271,16 @@
         .form-control:focus, .form-select:focus {
             outline: none;
             box-shadow: 0 0 5px #D5A02A; 
+        }
+
+    .btn-danger {
+        background-color: #E63946; /* Red color for delete button */
+        color: #FAF3E0;
+        border: none;
+    }
+
+        .btn-danger:hover {
+            background-color: #D62828;
         }
 
     /* Icons Styling */
@@ -365,9 +393,15 @@
     }
 
  
-
+    private async Task deleteTask(TodoTask task)
+    {
+        var response = await HttpClient.DeleteAsync($"api/tasks/{task.Id}");
+        if (response.IsSuccessStatusCode)
+        {
+            await LoadTasks(); // Reload the tasks to reflect the deletion
+        }
+    }
     
-
 
 
     private int CalculateProgress(List<TodoTask> tasks)
