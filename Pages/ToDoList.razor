@@ -2,9 +2,10 @@
 @inject HttpClient HttpClient
 
 <div class="background-grad p-5 m-5">
-    <div class="alert alert-primary" role="alert">
-        <h3 class="text-center">Checklist </h3>
+    <div class="alert alert-primary" role="alert" style="background-color: #2A2F24; color: #FAF3E0; border-color: #6E8B3D;">
+        <h3 class="text-center">Checklist</h3>
     </div>
+
 
     <!-- Stacked Progress Bar with Labels -->
     <div class="progress-stacked mt-3 mb-4">
@@ -68,8 +69,12 @@
         <p>No tasks available for 18 months left.</p>
     }
 
-    <h4>12 Months Left Tasks</h4>
-    @if (todo12Months.Any())
+    <h4>12 Months Left Tasks
+        <button class="btn btn-link" @onclick="() => ToggleTaskGroupVisibility(12)">
+            <i class="@(!show12MonthsTasks ? "bi bi-dash-circle" : "bi bi-plus-circle")" style="color: #f0ba6e;"></i>
+        </button>
+    </h4>
+    @if (show12MonthsTasks && todo12Months.Any())
     {
         <ul class="list-group">
             @foreach (var task in todo12Months)
@@ -95,13 +100,21 @@
             }
         </ul>
     }
+    else if (!show12MonthsTasks)
+    {
+        <p>Tasks hidden. Click to show.</p>
+    }
     else
     {
         <p>No tasks available for 12 months left.</p>
     }
 
-    <h4>6 Months Left Tasks</h4>
-    @if (todo6Months.Any())
+    <h4>6 Months Left Tasks
+        <button class="btn btn-link" @onclick="() => ToggleTaskGroupVisibility(6)">
+            <i class="@(!show6MonthsTasks ? "bi bi-dash-circle" : "bi bi-plus-circle")" style="color: #f0ba6e;"></i>
+        </button>
+    </h4>
+    @if (show6MonthsTasks && todo6Months.Any())
     {
         <ul class="list-group">
             @foreach (var task in todo6Months)
@@ -148,26 +161,108 @@
 </div>
 
 <style>
+    /* General Background and Text Colors */
     .background-grad {
-        background-color: #0093E9;
-        background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
+        background-color: #162410; /* Dark green background */
+        color: #FAF3E0; 
+        padding: 2rem;
+        border-radius: 10px;
+        border: 2px solid #D5A02A; 
     }
 
+    /* Heading and Label Colors */
+    h2, h3, h4 {
+        color: #D5A02A; 
+    }
+
+    /* Countdown Display */
+    .countdown h1 {
+        font-size: 3rem;
+        color: #E36A00; 
+    }
+
+    /* Progress Bars Styling */
     .progress-stacked {
         display: flex;
     }
 
     .progress {
         flex: 1;
+        background-color: #3C493F; 
     }
 
     .progress-bar {
-        width: 100%;
-        color: white; /* Ensures text is visible on dark backgrounds */
+        color: #162410; 
         text-align: center;
         font-weight: bold;
     }
+
+    /* Colors for Specific Progress Bars */
+    .bg-success {
+        background-color: #6E8B3D !important; 
+    }
+
+    .bg-warning {
+        background-color: #D5A02A !important; 
+    }
+
+    .bg-info {
+        background-color: #E36A00 !important; 
+    }
+
+    /* Task List Styling */
+    .list-group-item {
+        background-color: #2A2F24; 
+        color: #FAF3E0; 
+        border: 1px solid #6E8B3D; 
+    }
+
+    /* Button Styling */
+    .btn-link {
+        color: #E36A00;
+        font-size: 1.2rem;
+    }
+
+        .btn-link:hover {
+            color: #D5A02A; 
+            text-decoration: none;
+        }
+
+    .btn-primary, .btn-success {
+        background-color: #E36A00; 
+        color: #162410;
+        font-weight: bold;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 5px;
+    }
+
+        .btn-primary:hover, .btn-success:hover {
+            background-color: #D5A02A; 
+            color: #162410;
+        }
+
+    /* Input Styling */
+    .form-control, .form-select {
+        background-color: #3C493F; 
+        color: #FAF3E0;
+        border: 1px solid #6E8B3D; 
+        border-radius: 5px;
+    }
+
+        .form-control:focus, .form-select:focus {
+            outline: none;
+            box-shadow: 0 0 5px #D5A02A; 
+        }
+
+    /* Icons Styling */
+    i {
+        color: #D5A02A; 
+    }
 </style>
+
+
+
 
 @code {
     public class TodoTask

@@ -41,33 +41,67 @@
 
 <style>
     .background-grad {
-        background-color: #4E73DF;
-        background-image: linear-gradient(160deg, #4E73DF 0%, #1CC88A 100%);
-        color: white;
+        background-color: #1C1C1C; /* Dark background */
+        color: #FFD700; /* Yellow text for accents */
         padding: 2rem;
         border-radius: 10px;
+        border: 2px solid #FFD700; /* Yellow border for contrast */
+    }
+
+    h2, h4, label {
+        color: #FFD700; /* Yellow color for headings and labels */
+    }
+
+    p, .form-label, h3 {
+        color: #CCCCCC; /* Light gray for secondary text */
     }
 
     .countdown h1 {
         font-size: 3rem;
-        color: #FFD700;
+        color: #FFD700; /* Bright yellow for countdown */
+        font-weight: bold;
     }
 
     .date-input {
         width: 50%;
         margin: 0 auto;
         padding: 0.5rem;
+        background-color: #333333; /* Darker input field */
+        color: #FFD700;
+        border: 1px solid #FFD700;
+        border-radius: 5px;
+    }
+
+    .date-input:focus {
+        outline: none;
+        box-shadow: 0 0 5px #FFD700; /* Yellow glow on focus */
     }
 
     .btn-primary {
-        background-color: #1CC88A;
+        background-color: #FFD700;
+        color: #1C1C1C;
+        font-weight: bold;
         border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 5px;
     }
 
-        .btn-primary:hover {
-            background-color: #17A673;
-        }
+    .btn-primary:hover {
+        background-color: #FFC300; /* Slightly lighter yellow on hover */
+        color: #1C1C1C;
+    }
+
+    hr {
+        border-color: #FFD700; /* Yellow horizontal line */
+    }
+
+    /* Add styling for icons (if any) */
+    .icon {
+        color: #FFD700; /* Yellow color for icons */
+        font-size: 1.5rem;
+    }
 </style>
+
 
 @code {
     private DateTime? endDate;
